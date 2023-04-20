@@ -100,4 +100,16 @@ class PopulatePlantsController extends \App\Http\Controllers\Controller
 
         return collect(json_decode($res->getBody()->getContents()));
     }
+
+    /**
+     * @return void
+     */
+    public function processJson() {
+//        $file = file_get_contents('D:/Desktop/usdaplants.json');
+//
+//        $plantsCollection = collect(json_decode($file, true))->map(function($a) {
+//            dd($a);
+//        });
+
+    }
 }
