@@ -1,6 +1,8 @@
 import './bootstrap';
 
 import Alpine from 'alpinejs';
+import 'flowbite';
+import "./dom_elements/progressbar";
 
 window.Alpine = Alpine;
 

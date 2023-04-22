@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Plants\PlantsController;
 use App\Http\Controllers\Plants\Populate\PopulatePlantsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -19,14 +20,10 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Route::prefix('plants')->name('plants.')->group(function() {
-    Route::get('/', function () {
-        return view('index');
-    })->name('index');
+Route::controller(PlantsController::class)->prefix('plants')->name('plants.')->group(function() {
+    Route::get('/', 'index')->name('index');
 
-    Route::get('/{name}', function () {
-        return view('index');
-    })->name('details');
+    Route::get('/{slug}', 'details')->name('details');
 });
 
 Route::controller(PopulatePlantsController::class)->group(function() {

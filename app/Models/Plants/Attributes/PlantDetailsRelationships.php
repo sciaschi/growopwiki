@@ -3,18 +3,18 @@
 namespace App\Models\Plants\Attributes;
 
 use App\Models\Plants\Plants;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait PlantDetailsRelationships {
 
     /**
      * Get the user associated with the Relationship
      *
-     * @return HasOne
+     * @return BelongsTo
      */
-    public function plant(): HasOne
+    public function plant(): belongsTo
     {
-        return $this->hasOne(Plants::class, 'id', 'plant_id');
+        return $this->belongsTo(Plants::class, 'id', 'plant_id');
     }
 
 }
