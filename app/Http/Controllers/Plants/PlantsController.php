@@ -21,9 +21,14 @@ class PlantsController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        $plants = Plants::with('details')->where(function($query) {
-            $query->whereRelation('details', 'active_growth_period', '!=', '');
-        })->get();
+        $plantsCollection = Plants::with('details')->where('common_name', '!=', null)->get();
+
+        $plants = $plantsCollection->map(function($plant) {
+            $plant->common_name = ucwords($plant->common_name);
+            $plant->scientific_name = strip_tags(html_entity_decode($plant->scientific_name));
+
+            return $plant;
+        })->sortBy('common_name')->values();
 
         return view('plants/index')->with([
             'plants' => $plants
