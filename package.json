@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
+        "dev": "php artisan scout:sync-index-settings && vite",
         "build": "vite build"
     },
     "devDependencies": {

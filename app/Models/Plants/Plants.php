@@ -5,10 +5,11 @@ namespace App\Models\Plants;
 use App\Models\Plants\Attributes\PlantsRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Plants extends Model
 {
-    use HasFactory, PlantsRelationships;
+    use Searchable, HasFactory, PlantsRelationships;
 
     /**
      * Table Name

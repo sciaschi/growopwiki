@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Plants\Populate;
 
+use App\Models\Plants\Plant_Details;
+use App\Models\Plants\Plants;
 use GuzzleHttp;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -51,6 +53,8 @@ class PopulatePlantsController extends \App\Http\Controllers\Controller
             }
 
             $plants = array_merge($plants,$loopRes->all());
+
+            $offset++;
         }
         dd(json_encode(collect($plants)));
     }
@@ -89,7 +93,7 @@ class PopulatePlantsController extends \App\Http\Controllers\Controller
                 'CopyrightStatuses' => NULL,
                 'ImageTypes' => NULL,
                 'SortBy' => 'sortSciName',
-                'Offset' => $offset,
+                'Offset' => $offset == -1 || $offset == 0 ? $offset : $offset * 25,
                 'FilterOptions' => NULL,
                 'UnfilteredPlantIds' => NULL,
                 'Type' => 'Characteristics',
@@ -105,11 +109,89 @@ class PopulatePlantsController extends \App\Http\Controllers\Controller
      * @return void
      */
     public function processJson() {
+        $file = file_get_contents('E:/Websites/growopwiki/usda-plants.json');
+
+        $plantsCollection = collect(json_decode($file, true))->map(function($plantArr) {
+            $plant = new Plants();
+
+            $plant->symbol = $plantArr['Symbol'] ?? '';
+            $plant->scientific_name = $plantArr['ScientificName'] ?? null;
+            $plant->common_name = $plantArr['CommonName'] ?? null;
+            $plant->duration = $plantArr['Durations'] ?? '';
+            $plant->growth_habit = $plantArr['GrowthHabits'] ?? '';
+
+            return $plant;
+        });
+
+        Plants::insert($plantsCollection->toArray());
+
+        $plantDetailsCollection = collect(json_decode($file, true))->map(function($plantDetailsArr, $index) {
+            $plantCharacteristics = $plantDetailsArr['characteristics'];
+
+            $plantDetails = new Plant_Details();
+
+            $plantDetails->plant_id = $index + 1;
+            $plantDetails->active_growth_period = $plantCharacteristics['Active Growth Period'] ?? null;
+            $plantDetails->growth_rate = $plantCharacteristics['Growth Rate'] ?? '';
+            $plantDetails->drought_tolerance = $plantCharacteristics['Drought Tolerance'] ?? '';
+            $plantDetails->fertility_requirement = $plantCharacteristics['Fertility Requirement'] ?? '';
+            $plantDetails->adapted_coarse_soil = $plantCharacteristics['Adapted to Coarse Textured Soils'] == "Yes" ?? -1;
+            $plantDetails->adapted_fine_soil = $plantCharacteristics['Adapted to Fine Textured Soils'] == "Yes" ?? -1;
+            $plantDetails->adapted_medium_soil = $plantCharacteristics['Adapted to Medium Textured Soils'] == "Yes" ?? -1;
+            $plantDetails->ph_min = $plantCharacteristics['pH, Minimum'] ?? 0;
+            $plantDetails->ph_max = $plantCharacteristics['pH, Maximum'] ?? 0;
+            $plantDetails->temp_min = $plantCharacteristics['Temperature, Minimum (°F)'] ?? 0;
+            $plantDetails->mature_height = $plantCharacteristics['Height, Mature (feet)'] ?? 0;
+            $plantDetails->root_depth = $plantCharacteristics['Root Depth, Minimum (inches)'] ?? 0;
+
+            return $plantDetails;
+        });
+
+        Plant_Details::insert($plantDetailsCollection->toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function getDataFromUSDA() {
 //        $file = file_get_contents('D:/Desktop/usdaplants.json');
 //
 //        $plantsCollection = collect(json_decode($file, true))->map(function($a) {
 //            dd($a);
 //        });
+    }
 
+    /**
+     * @return string
+     */
+    public function exportToCSV() {
+        $plantsCollection = Plants::with('details')->get();
+
+        $plantsMergedDetails = $plantsCollection->map(function($q) {
+           return [
+              $q->symbol,
+              $q->scientific_name,
+              $q->common_name,
+              $q->duration,
+              $q->growth_habit,
+              $q->subkingdom,
+              $q->superdivision,
+              $q->division,
+              $q->details->active_growth_period,
+              $q->details->growth_rate,
+              $q->details->drought_tolerance,
+              $q->details->fertility_requirement,
+              $q->details->adapted_coarse_soil,
+              $q->details->adapted_fine_soil,
+              $q->details->adapted_medium_soil,
+              $q->details->ph_min,
+              $q->details->ph_max,
+              $q->details->temp_min,
+              $q->details->mature_height,
+              $q->details->root_depth
+           ];
+        });
+
+        dd($plantsMergedDetails->first());
     }
 }

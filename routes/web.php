@@ -29,6 +29,7 @@ Route::controller(PlantsController::class)->prefix('plants')->name('plants.')->g
 Route::controller(PopulatePlantsController::class)->group(function() {
     Route::get('/populate-plants', 'populate');
     Route::get('/process-plants-json', 'processJson');
+    Route::get('/exportToCSV', 'exportToCSV');
 });
 
 Route::get('/dashboard', function () {

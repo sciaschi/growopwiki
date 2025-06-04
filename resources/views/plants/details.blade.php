@@ -23,41 +23,80 @@
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Growth Rate
-                                        <progress-bar text="{{$details->growth_rate}}" current-step="3"></progress-bar>
+                                        @switch($details->growth_rate)
+                                            @case('Slow')
+                                                <progress-bar text="Slow" current-step="1"></progress-bar>
+                                                @break
+                                            @case('Moderate')
+                                                <progress-bar text="Moderate" current-step="2"></progress-bar>
+                                                @break
+                                            @case('Rapid')
+                                                <progress-bar text="Rapid" current-step="3"></progress-bar>
+                                                @break
+                                            @default
+                                                <progress-bar text="Unknown" current-step="0"></progress-bar>
+                                        @endswitch
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Drought Tolerance
-                                        <progress-bar text="{{$details->drought_tolerance}}" current-step="1"></progress-bar>
+                                        @switch($details->drought_tolerance)
+                                            @case('Low')
+                                                <progress-bar text="Low" current-step="1"></progress-bar>
+                                                @break
+                                            @case('Medium')
+                                                <progress-bar text="Medium" current-step="2"></progress-bar>
+                                                @break
+                                            @case('High')
+                                                <progress-bar text="High" current-step="3"></progress-bar>
+                                                @break
+                                            @default
+                                                <progress-bar text="Unknown" current-step="0"></progress-bar>
+                                        @endswitch
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Fertility Requirement
-                                        <progress-bar text="{{$details->fertility_requirement}}" current-step="2"></progress-bar>
+                                        @switch($details->fertility_requirement)
+                                            @case('Low')
+                                                <progress-bar text="Low" current-step="1"></progress-bar>
+                                                @break
+                                            @case('Medium')
+                                                <progress-bar text="Medium" current-step="2"></progress-bar>
+                                                @break
+                                            @case('High')
+                                                <progress-bar text="High" current-step="3"></progress-bar>
+                                                @break
+                                            @default
+                                                <progress-bar text="Unknown" current-step="0"></progress-bar>
+                                        @endswitch
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Adapted Coarse soil
                                         <p class="text-sm">
-                                            {!! $details->adapted_fine_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' : 'No <i class="fa-regular fa-circle-xmark"></i>' !!}
+                                            {!! $details->adapted_fine_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' :
+                                                                              'No <i class="fa-regular fa-circle-xmark"></i>' !!}
                                         </p>
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Adapted Fine soil
                                         <p class="text-sm">
-                                            {!! $details->adapted_fine_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' : 'No <i class="fa-regular fa-circle-xmark"></i>' !!}
+                                            {!! $details->adapted_fine_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' :
+                                                                              'No <i class="fa-regular fa-circle-xmark"></i>' !!}
                                         </p>
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Adapted to Medium soil
                                         <p class="text-sm">
-                                            {!! $details->adapted_medium_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' : 'No <i class="fa-regular fa-circle-xmark"></i>' !!}
+                                            {!! $details->adapted_medium_soil ? 'Yes <span class="fa-regular fa-circle-check"></span>' :
+                                                                                'No <i class="fa-regular fa-circle-xmark"></i>' !!}
                                         </p>
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Minimum pH
-                                        <p class="text-sm">{{$details->ph_min}}</p>
+                                        <p class="text-sm">{{$details->ph_min ? $details->ph_min : "Unknown"}}</p>
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Maximum pH
-                                        <p class="text-sm">{{$details->ph_max}}</p>
+                                        <p class="text-sm">{{$details->ph_max ? $details->ph_max : "Unknown"}}</p>
                                     </p>
                                     <p class="text-md leading-6 text-white-700">
                                         Temperature Minimum
